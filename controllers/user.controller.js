@@ -87,3 +87,21 @@ module.exports.login = async (req, res) => {
     });
   }
 };
+
+//verified is user is login or not
+
+module.exports.isAuthenticated = async (req, res, next) => {
+  try {
+    const verified = jwt.verify(req.headers.token, process.env.JWT_SECRET);
+    console.log("JWT", verified);
+    if (!verified) {
+      return res.status(400).json({ message: "Something went wrongs" });
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Server side error with isAuthenticated Mw" });
+  }
+};
